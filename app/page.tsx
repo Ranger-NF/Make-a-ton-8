@@ -9,9 +9,29 @@ export default function Home() {
     size: 150,
     position: { x: 0, y: 0 },
     isDragging: false,
+    webcamEnabled: false,
   });
 
   const wsRef = useRef<WebSocket | null>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (state.webcamEnabled) {
+      navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+          if (videoRef.current) {
+            videoRef.current.srcObject = stream;
+          }
+        })
+        .catch(err => console.error("Webcam error:", err));
+    } else {
+      if (videoRef.current && videoRef.current.srcObject) {
+        const stream = videoRef.current.srcObject as MediaStream;
+        stream.getTracks().forEach(track => track.stop());
+        videoRef.current.srcObject = null;
+      }
+    }
+  }, [state.webcamEnabled]);
 
   useEffect(() => {
     // Connect to WebSocket server
@@ -36,7 +56,17 @@ export default function Home() {
 
   return (
     <div className="flex h-screen w-full flex-col bg-white font-sans overflow-hidden select-none transition-colors duration-500">
-      <main className="relative flex-1 w-full overflow-hidden flex items-center justify-center">
+      {state.webcamEnabled && (
+        <video
+          ref={videoRef}
+          className="absolute inset-0 w-full h-full object-cover scale-x-[-1]"
+          autoPlay
+          muted
+          playsInline
+        />
+      )}
+
+      <main className="relative flex-1 w-full overflow-hidden flex items-center justify-center bg-transparent z-10">
         {state.type ? (
           <Shape
             type={state.type}

@@ -7,6 +7,7 @@ let state = {
     size: 150,
     position: { x: 0, y: 0 },
     isDragging: false,
+    webcamEnabled: false,
 };
 
 wss.on('connection', (ws) => {
@@ -32,6 +33,9 @@ wss.on('connection', (ws) => {
                     break;
                 case 'setDragging':
                     state.isDragging = message.value;
+                    break;
+                case 'setWebcam':
+                    state.webcamEnabled = message.value;
                     break;
             }
 
