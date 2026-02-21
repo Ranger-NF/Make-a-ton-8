@@ -4,9 +4,9 @@ import websockets
 
 # Global shared state
 state = {
-    "type": None,
-    "size": 150,
-    "position": {"x": 0, "y": 0},
+    "type": "CIRCLE",
+    "size": 250,
+    "position": {"x": 400, "y": 200},
     "isDragging": False,
     "webcamEnabled": False,
 }

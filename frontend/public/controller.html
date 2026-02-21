@@ -33,10 +33,31 @@
 <body class="p-8 flex flex-col items-center gap-12 select-none">
     <h1 class="text-4xl font-black italic uppercase tracking-tighter">Remote Controller</h1>
 
-    <div class="flex gap-4">
-        <button onclick="send('setShape', 'circle')" class="px-6 py-2 bg-indigo-400">CIRCLE</button>
-        <button onclick="send('setShape', 'square')" class="px-6 py-2 bg-rose-400">SQUARE</button>
-        <button onclick="send('setShape', 'triangle')" class="px-6 py-2 bg-emerald-400">TRIANGLE</button>
+    <div class="flex flex-col items-center gap-4">
+        <h2 class="text-xs font-black uppercase tracking-widest opacity-30">Shapes</h2>
+        <div class="flex gap-4">
+            <button onclick="send('setShape', 'circle')" class="px-6 py-2 bg-indigo-400">CIRCLE</button>
+            <button onclick="send('setShape', 'square')" class="px-6 py-2 bg-rose-400">SQUARE</button>
+            <button onclick="send('setShape', 'triangle')" class="px-6 py-2 bg-emerald-400">TRIANGLE</button>
+        </div>
+    </div>
+
+    <div class="flex flex-col items-center gap-4">
+        <h2 class="text-xs font-black uppercase tracking-widest opacity-30">Letters</h2>
+        <div class="flex gap-4">
+            <button onclick="send('setShape', 'A')" class="px-6 py-2 bg-yellow-400">A</button>
+            <button onclick="send('setShape', 'B')" class="px-6 py-2 bg-yellow-400">B</button>
+            <button onclick="send('setShape', 'C')" class="px-6 py-2 bg-yellow-400">C</button>
+        </div>
+    </div>
+
+    <div class="flex flex-col items-center gap-4">
+        <h2 class="text-xs font-black uppercase tracking-widest opacity-30">Numbers</h2>
+        <div class="flex gap-4">
+            <button onclick="send('setShape', 'ONE')" class="px-6 py-2 bg-yellow-400">ONE</button>
+            <button onclick="send('setShape', 'TWO')" class="px-6 py-2 bg-yellow-400">TWO</button>
+            <button onclick="send('setShape', 'THREE')" class="px-6 py-2 bg-yellow-400">THREE</button>
+        </div>
     </div>
 
     <div class="flex gap-4">
