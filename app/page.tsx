@@ -1,101 +1,68 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Shape, { ShapeType } from "@/components/Shape";
-import ShapePicker from "@/components/ShapePicker";
-import ResizeControls from "@/components/ResizeControls";
 
 export default function Home() {
-  const [shape, setShape] = useState<ShapeType>(null);
-  const [size, setSize] = useState(150);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [isDragging, setIsDragging] = useState(false);
-  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [state, setState] = useState({
+    type: null as ShapeType,
+    size: 150,
+    position: { x: 0, y: 0 },
+    isDragging: false,
+  });
 
-  const containerRef = useRef<HTMLDivElement>(null);
+  const wsRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
-    // Center the shape initially within the container
-    if (containerRef.current && shape && position.x === 0 && position.y === 0) {
-      const rect = containerRef.current.getBoundingClientRect();
-      setPosition({
-        x: rect.width / 2 - size / 2,
-        y: rect.height / 2 - size / 2,
-      });
-    }
-  }, [shape]);
+    // Connect to WebSocket server
+    const host = window.location.hostname;
+    const ws = new WebSocket(`ws://${host}:8080`);
+    wsRef.current = ws;
 
-  const handleDrawShape = (type: ShapeType) => {
-    setShape(type);
-    // Reset position to center when changing shapes
-    if (containerRef.current) {
-      const rect = containerRef.current.getBoundingClientRect();
-      setPosition({
-        x: rect.width / 2 - size / 2,
-        y: rect.height / 2 - size / 2,
-      });
-    }
-  };
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (data.type === "sync" || data.type === "update") {
+        setState(data.state);
+      }
+    };
 
-  const handleResize = (amount: number) => {
-    setSize((prev) => Math.max(50, Math.min(prev + amount, 400)));
-  };
+    ws.onopen = () => console.log("Connected to WebSocket");
+    ws.onclose = () => console.log("Disconnected from WebSocket");
 
-  const handleMouseDown = (e: React.MouseEvent) => {
-    if (!shape) return;
-    setIsDragging(true);
-    setDragOffset({
-      x: e.clientX - position.x,
-      y: e.clientY - position.y,
-    });
-  };
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging || !containerRef.current) return;
-
-    const rect = containerRef.current.getBoundingClientRect();
-    let newX = e.clientX - dragOffset.x;
-    let newY = e.clientY - dragOffset.y;
-
-    // Constrain within container bounds
-    newX = Math.max(0, Math.min(newX, rect.width - size));
-    newY = Math.max(0, Math.min(newY, rect.height - size));
-
-    setPosition({ x: newX, y: newY });
-  };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
-  };
+    return () => {
+      ws.close();
+    };
+  }, []);
 
   return (
-    <div
-      className="flex h-screen w-full flex-col bg-amber-50 font-sans transition-colors duration-500 overflow-hidden select-none"
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseUp}
-    >
-      <ShapePicker onDrawShape={handleDrawShape} />
-
-      <main
-        ref={containerRef}
-        className="relative flex-1 w-full overflow-hidden flex items-center justify-center"
-      >
-        {shape ? (
+    <div className="flex h-screen w-full flex-col bg-white font-sans overflow-hidden select-none transition-colors duration-500">
+      <main className="relative flex-1 w-full overflow-hidden flex items-center justify-center">
+        {state.type ? (
           <Shape
-            type={shape}
-            size={size}
-            position={position}
-            onMouseDown={handleMouseDown}
+            type={state.type}
+            size={state.size}
+            position={state.position}
+            onMouseDown={() => { }} // Local interaction disabled
           />
         ) : (
-          <p className="text-black/10 font-bold uppercase tracking-[1em] text-4xl animate-pulse pointer-events-none">
-            Draw something
-          </p>
+          <div className="flex flex-col items-center gap-4 animate-pulse">
+            <p className="text-black/5 font-black uppercase tracking-[2em] text-6xl">
+              REMOTE
+            </p>
+            <p className="text-black/10 font-bold uppercase tracking-[0.5em] text-xl">
+              Waiting for input
+            </p>
+          </div>
         )}
       </main>
 
-      {shape && <ResizeControls onResize={handleResize} />}
+      {/* Visual Indicator for connection status */}
+      <div className="fixed top-4 right-4 flex items-center gap-2 px-3 py-1 bg-black/5 rounded-full backdrop-blur-sm border border-black/10">
+        <div className={`w-2 h-2 rounded-full ${wsRef.current?.readyState === 1 ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'}`} />
+        <span className="text-[10px] font-black uppercase tracking-tighter text-black/40">
+          WS Connection
+        </span>
+      </div>
     </div>
   );
 }
