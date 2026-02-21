@@ -2,7 +2,8 @@
 
 import { useState, useRef, useEffect } from "react";
 import Shape, { ShapeType } from "@/components/Shape";
-import Controls from "@/components/Controls";
+import ShapePicker from "@/components/ShapePicker";
+import ResizeControls from "@/components/ResizeControls";
 
 export default function Home() {
   const [shape, setShape] = useState<ShapeType>(null);
@@ -69,36 +70,32 @@ export default function Home() {
 
   return (
     <div
-      className="flex min-h-screen flex-col items-center justify-center bg-white p-8 font-sans transition-colors duration-500 overflow-hidden"
+      className="flex h-screen w-full flex-col bg-amber-50 font-sans transition-colors duration-500 overflow-hidden select-none"
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
     >
-      <main className="flex flex-col items-center gap-12 w-full max-w-4xl">
-        <Controls
-          onDrawShape={handleDrawShape}
-          onResize={handleResize}
-          activeShape={shape}
-        />
+      <ShapePicker onDrawShape={handleDrawShape} />
 
-        <div
-          ref={containerRef}
-          className="relative flex items-center justify-center min-h-[600px] w-full border-8 border-dashed border-black/10 rounded-3xl bg-zinc-50/50 backdrop-blur-sm shadow-inner"
-        >
-          {shape ? (
-            <Shape
-              type={shape}
-              size={size}
-              position={position}
-              onMouseDown={handleMouseDown}
-            />
-          ) : (
-            <p className="text-black/20 font-black uppercase tracking-[0.2em] text-2xl animate-pulse pointer-events-none select-none">
-              Pick a shape
-            </p>
-          )}
-        </div>
+      <main
+        ref={containerRef}
+        className="relative flex-1 w-full overflow-hidden flex items-center justify-center"
+      >
+        {shape ? (
+          <Shape
+            type={shape}
+            size={size}
+            position={position}
+            onMouseDown={handleMouseDown}
+          />
+        ) : (
+          <p className="text-black/10 font-bold uppercase tracking-[1em] text-4xl animate-pulse pointer-events-none">
+            Draw something
+          </p>
+        )}
       </main>
+
+      {shape && <ResizeControls onResize={handleResize} />}
     </div>
   );
 }
