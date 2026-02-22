@@ -1,14 +1,14 @@
-# 🦾 RemoteCanvas: Biophysical Interactive Display
+# 🦾 Mudra: The Versatile Gesture Bridge
 
-**Transform movement and muscle activity into a reactive, remote-controlled stage.**
+**Translate physical intent into digital action through biophysical intelligence.**
 
-RemoteCanvas is a low-latency, WebSocket-driven display system that translates high-fidelity data from **IMU/MPU** and **EMG** sensors into interactive digital art. Designed for interactive installations, biometric performance, and dynamic digital signage, it provides a high-contrast canvas where geometry and language are driven by physical agency.
+Mudra is a high-performance, WebSocket-driven gesture recognition system that bridges the gap between the physical and digital worlds. By leveraging high-fidelity data from **IMU/MPU** and **EMG** sensors, Mudra provides a versatile framework for translating complex hand and body gestures into real-time commands. Whether driving geometric art, building language sequences, or controlling remote interfaces, Mudra is the foundation for the next generation of biophysical interaction.
 
 ---
 
-## 🚀 The Pitch: Why RemoteCanvas?
+## 🚀 The Pitch: Why Mudra?
 
-In a world of static digital signage, RemoteCanvas brings **agency**. Whether you're building an interactive museum exhibit, a real-time collaborative workspace, or a performance art piece, this project bridge the gap between "Input" and "Display" with zero friction.
+In an era of touchless interaction, Mudra brings **precision and versatility**. Designed as a modular tool, it acts as a universal adapter for biometric data, enabling creators to build experiences where human movement is the primary interface.
 
 ### Key Capabilities:
 - **🦾 Biometric & Inertial Control**: Built to ingest high-fidelity data from **IMU/MPU sensors** and **EMG** devices, translating physical movement and muscle activity into digital geometric form.
@@ -62,10 +62,10 @@ graph TD
 
 ---
 
-RemoteCanvas is designed with a decoupled architecture, prioritizing portability and performance.
+Mudra is designed with a decoupled architecture, prioritizing portability and performance.
 
 ### 1. The Real-time Core (Backend)
-The system is powered by a lightweight WebSocket server (available in both **Python** and **Node.js**). It acts as a stateless state-synchronizer:
+The system is powered by a lightweight WebSocket server in **Python**. It acts as a stateless state-synchronizer:
 - **State Broadcasting**: Every change (position, content, size) is broadcasted to all connected clients in a single hop.
 - **Multi-Client Support**: Multiple displays can subscribe to the same stream for synchronized multi-screen experiences.
 
@@ -99,7 +99,7 @@ pnpm dev
 ---
 
 ## 🎨 Aesthetic Philosophy
-RemoteCanvas embraces **Neo-Brutalism**:
+Mudra embraces **Neo-Brutalism**:
 - **Hard Shadows**: Unapologetic offsets that create depth.
 - **Thick Borders**: Defines boundaries clearly for high visibility.
 - **High-Saturation**: Using indigo, emerald, and rose to command attention.
