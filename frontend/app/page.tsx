@@ -56,41 +56,27 @@ export default function Home() {
           const incomingType = incomingState.type;
           const currentDisplayType = prev.type;
 
-          // scenario 1: Exactly the same state received as last time
-          // (Treat as repeated command of the same text/number)
-          if (data.type === "update") {
-            if (incomingType && !isShape(incomingType)) {
+          const lastState = lastStateStr ? JSON.parse(lastStateStr) : null;
+
+          if (isShape(incomingType)) {
+            // Shapes always replace
+            return { ...incomingState };
+          } else if (incomingType) {
+            // Incoming is text/number
+            if (isShape(currentDisplayType) || !currentDisplayType) {
+              // Current is shape or null, replace with text
+              return { ...incomingState };
+            } else {
+              // Current is text, append
               return {
                 ...incomingState,
-                type: (currentDisplayType || "") + incomingType,
+                type: currentDisplayType + incomingType,
               };
             }
+
           }
 
-          // scenario 2: State changed (or first sync)
-          const lastState = lastStateStr ? JSON.parse(lastStateStr) : null;
-          const typeChanged = !lastState || incomingType !== lastState.type;
-
-          if (typeChanged) {
-            if (isShape(incomingType)) {
-              // Shapes always replace
-              return { ...incomingState };
-            } else if (incomingType) {
-              // Incoming is text/number
-              if (isShape(currentDisplayType) || !currentDisplayType) {
-                // Current is shape or null, replace with text
-                return { ...incomingState };
-              } else {
-                // Current is text, append
-                return {
-                  ...incomingState,
-                  type: currentDisplayType + incomingType,
-                };
-              }
-            }
-          }
-
-          // scenario 3: Type is same but other properties (pos/size) changed
+          // Type is same but other properties (pos/size) changed
           // Preserve the currently accumulated type
           return {
             ...incomingState,
