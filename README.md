@@ -1,21 +1,23 @@
-# 🦾 Mudra: The Versatile Gesture Bridge
+# 👌 Mudra
 
-**Translate physical intent into digital action through biophysical intelligence.**
+**Next-generation human–computer interaction through biophysical intelligence.**
 
-Mudra is a high-performance, WebSocket-driven gesture recognition system that bridges the gap between the physical and digital worlds. By leveraging high-fidelity data from **IMU/MPU** and **EMG** sensors, Mudra provides a versatile framework for translating complex hand and body gestures into real-time commands. Whether driving geometric art, building language sequences, or controlling remote interfaces, Mudra is the foundation for the next generation of biophysical interaction.
+Mudra is a multi-purpose wearable input device that combines **EMG** (muscle activity) and **IMU** (motion) signals to recognize gestures in real time. By fusing these data streams, Mudra achieves more robust and accurate gesture recognition compared to traditional camera-based systems, which are often limited by line-of-sight and lighting conditions.
+
+The predictions are streamed instantly to a live, reactive interface via **WebSockets**, enabling low-latency, privacy-friendly, and hardware-efficient interaction.
 
 ---
 
 ## 🚀 The Pitch: Why Mudra?
 
-In an era of touchless interaction, Mudra brings **precision and versatility**. Designed as a modular tool, it acts as a universal adapter for biometric data, enabling creators to build experiences where human movement is the primary interface.
+Mudra offers a tactile, high-fidelity bridge between physical intent and digital action. Designed for precision and versatility, it works where cameras fail—providing a privacy-first, hardware-efficient solution for interactive environments.
 
 ### Key Capabilities:
-- **🦾 Biometric & Inertial Control**: Built to ingest high-fidelity data from **IMU/MPU sensors** and **EMG** devices, translating physical movement and muscle activity into digital geometric form.
-- **🔤 Dynamic Accumulation**: Seamlessly build words and sequences letter-by-letter. The UI intelligently differentiates between shapes and text, allowing for fluid language expression.
-- **🎨 Reactive Geometry**: Instantly switch between circles, squares, and triangles. Each shape is a first-class citizen with immediate state synchronization.
-- **⚡ Zero-Latency Control**: Optimized WebSocket broadcasting ensures that every movement, resize, or content change is reflected across all display clients in real-time.
-- **💀 Neo-Brutalist Aesthetic**: A design language that is raw, honest, and high-impact. High-contrast borders and vibrant colors ensure visibility and style.
+- **🦾 EMG & IMU Fusion**: Combines muscle activity and motion data for robust, accurate recognition that outperforms camera-based tracking.
+- **⚡ Low-Latency Streaming**: Instant WebSocket broadcasting ensures real-time feedback with minimal overhead.
+- **🔐 Privacy-Friendly**: No cameras required. All interaction is derived from biometric and inertial signals, preserving user privacy.
+- **🔤 Dynamic Accumulation**: A smart frontend that builds language and geometry in real-time based on incoming gesture streams.
+- **💀 Neo-Brutalist Aesthetic**: A high-impact, raw design language that commands attention and ensures visibility.
 
 ---
 
