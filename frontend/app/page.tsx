@@ -12,22 +12,24 @@ export default function Home() {
     webcamEnabled: false,
   });
 
+  const lastRawStateRef = useRef<string>("");
   const wsRef = useRef<WebSocket | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     if (state.webcamEnabled) {
-      navigator.mediaDevices.getUserMedia({ video: true })
-        .then(stream => {
+      navigator.mediaDevices
+        .getUserMedia({ video: true })
+        .then((stream) => {
           if (videoRef.current) {
             videoRef.current.srcObject = stream;
           }
         })
-        .catch(err => console.error("Webcam error:", err));
+        .catch((err) => console.error("Webcam error:", err));
     } else {
       if (videoRef.current && videoRef.current.srcObject) {
         const stream = videoRef.current.srcObject as MediaStream;
-        stream.getTracks().forEach(track => track.stop());
+        stream.getTracks().forEach((track) => track.stop());
         videoRef.current.srcObject = null;
       }
     }
@@ -35,14 +37,66 @@ export default function Home() {
 
   useEffect(() => {
     // Connect to WebSocket server
-    const host = window.location.hostname;
+    const host = "10.125.129.232";
     const ws = new WebSocket(`ws://${host}:8080`);
     wsRef.current = ws;
 
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
       if (data.type === "sync" || data.type === "update") {
-        setState(data.state);
+        setState((prev) => {
+          const incomingState = data.state;
+          const incomingStateStr = JSON.stringify(incomingState);
+          const lastStateStr = lastRawStateRef.current;
+          lastRawStateRef.current = incomingStateStr;
+
+          const isShape = (t: string | null) =>
+            t && ["circle", "square", "triangle"].includes(t.toLowerCase());
+
+          const incomingType = incomingState.type;
+          const currentDisplayType = prev.type;
+
+          // scenario 1: Exactly the same state received as last time
+          // (Treat as repeated command of the same text/number)
+          if (data.type === "update") {
+            if (incomingType && !isShape(incomingType)) {
+              return {
+                ...incomingState,
+                type: (currentDisplayType || "") + incomingType,
+              };
+            }
+          }
+
+          // scenario 2: State changed (or first sync)
+          const lastState = lastStateStr ? JSON.parse(lastStateStr) : null;
+          const typeChanged = !lastState || incomingType !== lastState.type;
+
+          if (typeChanged) {
+            if (isShape(incomingType)) {
+              // Shapes always replace
+              return { ...incomingState };
+            } else if (incomingType) {
+              // Incoming is text/number
+              if (isShape(currentDisplayType) || !currentDisplayType) {
+                // Current is shape or null, replace with text
+                return { ...incomingState };
+              } else {
+                // Current is text, append
+                return {
+                  ...incomingState,
+                  type: currentDisplayType + incomingType,
+                };
+              }
+            }
+          }
+
+          // scenario 3: Type is same but other properties (pos/size) changed
+          // Preserve the currently accumulated type
+          return {
+            ...incomingState,
+            type: currentDisplayType,
+          };
+        });
       }
     };
 
@@ -67,28 +121,21 @@ export default function Home() {
       )}
 
       <main className="relative flex-1 w-full overflow-hidden flex items-center justify-center bg-transparent z-10">
-        {state.type ? (
+        {state.type && (
           <Shape
             type={state.type}
             size={state.size}
             position={state.position}
             onMouseDown={() => { }} // Local interaction disabled
           />
-        ) : (
-          <div className="flex flex-col items-center gap-4 animate-pulse">
-            <p className="text-black/5 font-black uppercase tracking-[2em] text-6xl">
-              REMOTE
-            </p>
-            <p className="text-black/10 font-bold uppercase tracking-[0.5em] text-xl">
-              Waiting for input
-            </p>
-          </div>
         )}
       </main>
 
       {/* Visual Indicator for connection status */}
       <div className="fixed top-4 right-4 flex items-center gap-2 px-3 py-1 bg-black/5 rounded-full backdrop-blur-sm border border-black/10">
-        <div className={`w-2 h-2 rounded-full ${wsRef.current?.readyState === 1 ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'}`} />
+        <div
+          className={`w-2 h-2 rounded-full ${wsRef.current?.readyState === 1 ? "bg-emerald-500 animate-pulse" : "bg-rose-500"}`}
+        />
         <span className="text-[10px] font-black uppercase tracking-tighter text-black/40">
           WS Connection
         </span>

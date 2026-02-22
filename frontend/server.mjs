@@ -22,6 +22,11 @@ wss.on('connection', (ws) => {
             console.log('Received:', message);
 
             switch (message.type) {
+                case 'sync':
+                    if (message.state) {
+                        state = { ...state, ...message.state };
+                    }
+                    break;
                 case 'setShape':
                     state.type = message.value;
                     break;

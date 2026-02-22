@@ -75,8 +75,13 @@ export default function Shape({ type, size, position, onMouseDown }: ShapeProps)
             return (
                 <div
                     onMouseDown={onMouseDown}
-                    style={style}
-                    className={baseStyles}
+                    style={{
+                        ...style,
+                        width: "auto",
+                        minWidth: size,
+                        padding: "0 1.5rem",
+                    }}
+                    className={baseStyles.replace("overflow-hidden", "overflow-visible")}
                 >
                     <span
                         className={`font-black text-black select-none whitespace-nowrap ${isNumber ? "" : "px-4"}`}
